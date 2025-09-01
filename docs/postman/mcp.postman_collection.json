@@ -1,0 +1,168 @@
+{
+  "info": {
+    "name": "MCP Streamable HTTP",
+    "description": "Postman collection to exercise the MCP server via Streamable HTTP (JSON-RPC). Start with Initialize to create a session; subsequent requests must set the mcp-session-id header.",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "mcp_session_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Initialize (create session)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const sid = pm.response.headers.get('Mcp-Session-Id') || pm.response.headers.get('mcp-session-id');",
+              "if (sid) { pm.collectionVariables.set('mcp_session_id', sid); }",
+              "pm.test('Mcp-Session-Id captured', function () { pm.expect(pm.collectionVariables.get('mcp_session_id')).to.be.ok; });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Accept", "value": "application/json, text/event-stream" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"initialize\",\n  \"params\": {\n    \"clientInfo\": { \"name\": \"postman\", \"version\": \"1.0.0\" },\n    \"capabilities\": {}\n  }\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/mcp", "host": ["{{baseUrl}}"], "path": ["mcp"] }
+      }
+    },
+    {
+      "name": "Tools",
+      "item": [
+        {
+          "name": "List Tools",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json, text/event-stream" },
+              { "key": "mcp-session-id", "value": "{{mcp_session_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 2,\n  \"method\": \"tools/list\",\n  \"params\": {}\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/mcp", "host": ["{{baseUrl}}"], "path": ["mcp"] }
+          }
+        },
+        {
+          "name": "Call Tool: add",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json, text/event-stream" },
+              { "key": "mcp-session-id", "value": "{{mcp_session_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 3,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"add\",\n    \"arguments\": { \"a\": 5, \"b\": 3 }\n  }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/mcp", "host": ["{{baseUrl}}"], "path": ["mcp"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Resources",
+      "item": [
+        {
+          "name": "List Resources",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json, text/event-stream" },
+              { "key": "mcp-session-id", "value": "{{mcp_session_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 4,\n  \"method\": \"resources/list\",\n  \"params\": {}\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/mcp", "host": ["{{baseUrl}}"], "path": ["mcp"] }
+          }
+        },
+        {
+          "name": "Read Resource: greeting://John",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json, text/event-stream" },
+              { "key": "mcp-session-id", "value": "{{mcp_session_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 5,\n  \"method\": \"resources/read\",\n  \"params\": { \n    \"uri\": \"greeting://John\"\n  }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/mcp", "host": ["{{baseUrl}}"], "path": ["mcp"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Prompts",
+      "item": [
+        {
+          "name": "List Prompts",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "mcp-session-id", "value": "{{mcp_session_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 6,\n  \"method\": \"prompts/list\",\n  \"params\": {}\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/mcp", "host": ["{{baseUrl}}"], "path": ["mcp"] }
+          }
+        },
+        {
+          "name": "Get Prompt: example",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "mcp-session-id", "value": "{{mcp_session_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 7,\n  \"method\": \"prompts/get\",\n  \"params\": { \n    \"name\": \"example\",\n    \"arguments\": { \n      \"userInput\": \"Hello from Postman\",\n      \"category\": \"greeting\"\n    }\n  }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/mcp", "host": ["{{baseUrl}}"], "path": ["mcp"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notifications (SSE)",
+      "request": {
+        "method": "GET",
+  "header": [ { "key": "mcp-session-id", "value": "{{mcp_session_id}}" }, { "key": "Accept", "value": "text/event-stream" } ],
+        "url": { "raw": "{{baseUrl}}/mcp", "host": ["{{baseUrl}}"], "path": ["mcp"] }
+      },
+      "description": "Optional: opens Server-Sent Events stream for server->client notifications."
+    },
+    {
+      "name": "Close Session",
+      "request": {
+        "method": "DELETE",
+        "header": [ { "key": "mcp-session-id", "value": "{{mcp_session_id}}" }, { "key": "Accept", "value": "application/json, text/event-stream" } ],
+        "url": { "raw": "{{baseUrl}}/mcp", "host": ["{{baseUrl}}"], "path": ["mcp"] }
+      }
+    }
+  ]
+}
