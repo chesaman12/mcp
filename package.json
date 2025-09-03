@@ -1,11 +1,12 @@
 {
   "name": "mcp-typescript-server",
   "version": "1.0.0",
-  "description": "A TypeScript implementation of the Model Context Protocol (MCP) server.",
+  "description": "A TypeScript implementation of the Model Context Protocol (MCP) server with Streamable HTTP transport.",
   "main": "src/app.ts",
   "scripts": {
     "start": "ts-node src/app.ts",
     "build": "tsc",
+    "dev": "ts-node --watch src/app.ts",
     "test": "jest"
   },
   "dependencies": {

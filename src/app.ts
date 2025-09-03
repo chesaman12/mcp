@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import { isInitializeRequest } from '@modelcontextprotocol/sdk/types.js';
-import { registerAll } from './server/index';
+import { registerAll, ServerContext } from './server/index';
 
 const app = express();
 const PORT = 3000;
@@ -16,8 +16,8 @@ app.use(express.json());
 app.use(
   cors({
     origin: '*',
-  exposedHeaders: ['Mcp-Session-Id'],
-    allowedHeaders: ['Content-Type', 'mcp-session-id']
+    exposedHeaders: ['Mcp-Session-Id'],
+    allowedHeaders: ['Content-Type', 'Mcp-Session-Id', 'Test-Pat']
   })
 );
 
@@ -56,7 +56,13 @@ app.post('/mcp', async (req: Request, res: Response) => {
         name: 'mcp-typescript-server',
         version: '1.0.0'
       });
-      registerAll(server);
+      
+      // Create context with request headers
+      const context: ServerContext = {
+        headers: req.headers
+      };
+      
+      registerAll(server, context);
 
       // Clean up when transport closes
       transport.onclose = () => {

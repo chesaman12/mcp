@@ -58,6 +58,23 @@
           }
         },
         {
+          "name": "Call Tool: add (with Test-Pat header)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json, text/event-stream" },
+              { "key": "mcp-session-id", "value": "{{mcp_session_id}}" },
+              { "key": "Test-Pat", "value": "my-auth-token-123" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 3,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"add\",\n    \"arguments\": { \"a\": 5, \"b\": 3 }\n  }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/mcp", "host": ["{{baseUrl}}"], "path": ["mcp"] }
+          }
+        },
+        {
           "name": "Call Tool: add",
           "request": {
             "method": "POST",
