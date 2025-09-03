@@ -8,7 +8,7 @@ This test application demonstrates the **recommended approach** from the [MCP do
 
 - � **Pass authentication tokens** to tools that need to make API calls
 - 📡 **Access custom headers** like `Test-Pat`, `Authorization`, etc.
-- 🏗️ **Implement Server-Level Context Injection** (Option 1 from MCP docs)
+- 🏗️ **Implement Server-Level Context Injection**
 - 🧪 **Test header-based authentication** in MCP workflows
 
 ## 🚀 Quick Demo
